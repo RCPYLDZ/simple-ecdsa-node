@@ -10,10 +10,8 @@ if (process.argv.length !== 5) {
 const privateKey = hexToBytes(process.argv[2]);
 const receiverAddress = process.argv[3];
 const amount = process.argv[4];
-const senderAddress = toHex(keccak256(secp256k1.getPublicKey(privateKey).slice(1)).slice(-20));
 
 const message = {
-    sender: senderAddress,
     receiver: receiverAddress,
     amount: amount,
 }
