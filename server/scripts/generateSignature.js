@@ -19,4 +19,5 @@ const message = {
 const signature = secp256k1.sign(toHex(Buffer.from(JSON.stringify(message))),privateKey);
 
 console.log('signature:', signature.toDERHex());
+console.log('recovery bit:',signature.recovery);
 

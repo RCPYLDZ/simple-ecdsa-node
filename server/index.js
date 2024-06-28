@@ -23,13 +23,13 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { recipient, amount, signatureHex } = req.body;
+  const { recipient, amount, signatureHex, recoveryBit } = req.body;
 
   const rawRequest = {
     receiver: recipient,
     amount: amount.toString(),
   }
-  var signature =  secp256k1.Signature.fromDER(signatureHex).addRecoveryBit(0);
+  var signature =  secp256k1.Signature.fromDER(signatureHex).addRecoveryBit(recoveryBit);
   var requestHex = toHex(Buffer.from(JSON.stringify(rawRequest)));
   var senderPublicKey = signature.recoverPublicKey(requestHex).toRawBytes();
   var sender = toHex(keccak256(senderPublicKey.slice(1)).slice(-20));
@@ -38,9 +38,6 @@ app.post("/send", (req, res) => {
   if(verificationResult){
     setInitialBalance(sender);
     setInitialBalance(recipient);
-
-
-
     if (balances[sender] < amount) {
       res.status(400).send({ message: "Not enough funds!" });
     } else {
